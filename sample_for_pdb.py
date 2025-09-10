@@ -206,6 +206,10 @@ if __name__ == '__main__':
             # # random choose mols from candidates
             prob = logp_to_rank_prob(np.array([p.average_logp[2:] for p in queue_tmp]), queue_weight)  # (logp_focal, logpdf_pos), logp_element, logp_hasatom, logp_bond
             n_tmp = len(queue_tmp)
+            if n_tmp == 0:
+                logger.warning('No more candidates to expand within the given parameters. '
+                               '(Box size may be too small or center may need to be changed.) Terminating.')
+                break
             next_idx = np.random.choice(np.arange(n_tmp), p=prob, size=min(config.sample.beam_size, n_tmp), replace=False)
             pool.queue = [queue_tmp[idx] for idx in next_idx]
 
